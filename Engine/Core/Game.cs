@@ -49,7 +49,8 @@ namespace Engine.Core
             this.CurrentScene = "MainMenu";
 
             // set game in settings file for other classes to interact with 
-            Settings.Game = this; 
+            Settings.Game = this;
+            SdlDotNet.Input.Mouse.ShowCursor = true;
         }
 
         #region Keyboard
@@ -85,7 +86,7 @@ namespace Engine.Core
         private void Events_Tick(object sender, TickEventArgs e)
         {
             // clear previous frame 
-            Screen.Fill(Color.CornflowerBlue);
+            Screen.Fill(Color.Black);
 
             // call draw 
             Scenes[CurrentScene].Draw(Screen);

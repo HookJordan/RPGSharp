@@ -1,5 +1,7 @@
-﻿using System;
+﻿using SdlDotNet.Graphics;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +16,8 @@ namespace Engine.Core.World.Map
 
         // Tiles for this map 
         public MapTile[,]Tiles { get; set; }
+
+        public List<Surface> Surfaces { get; set; }
 
         /// <summary>
         /// new Blank map
@@ -36,6 +40,32 @@ namespace Engine.Core.World.Map
                     this.Tiles[x, y] = new Map.MapTile(); 
                 }
             }
+
+            // load map textures
+            LoadSurfaces(@"Data\sheets\tilesets\");
+        }
+
+        public void LoadSurfaces(string dir)
+        {
+            // for each tile sheet in the directory
+            Bitmap sheet = null;
+            Surfaces = new List<Surface>();
+            Surfaces.Add(new Surface(new Bitmap(Settings.tileWidth, Settings.tileHeight))); 
+
+            foreach(string file in System.IO.Directory.GetFiles(dir))
+            {
+                // load the graphic 
+                sheet = (Bitmap)Image.FromFile(file);
+                sheet.MakeTransparent();
+                for(int y = 0; y < sheet.Height; y += Settings.tileHeight)
+                {
+                    for(int x = 0; x < sheet.Width; x+= Settings.tileWidth)
+                    {
+                        Bitmap t = sheet.Clone(new Rectangle(x, y, Settings.tileWidth, Settings.tileHeight), System.Drawing.Imaging.PixelFormat.DontCare);
+                        Surfaces.Add(new Surface(t));
+                    }
+                }
+            }
         }
 
         public MapTile GetTile(int x, int y)
@@ -53,6 +83,17 @@ namespace Engine.Core.World.Map
         public void SetTitle(MapTile t)
         {
 
+        }
+
+        public void SeetMap(int layer, int tileID)
+        {
+            for(int x = 0; x < Width; x++)
+            {
+                for(int y = 0; y < Height; y++)
+                {
+                    Tiles[x, y].SetLayer(0, tileID); 
+                }
+            }
         }
     }
 }

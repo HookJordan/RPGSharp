@@ -58,6 +58,8 @@
     <Compile Include="Core\Scenes\MainMenu.cs" />
     <Compile Include="Core\Scenes\OpenWorld.cs" />
     <Compile Include="Core\Sprite\Avatar.cs" />
+    <Compile Include="Core\Sprite\SpriteSkill\Skill.cs" />
+    <Compile Include="Core\Util\Cursor.cs" />
     <Compile Include="Core\World\Camera.cs" />
     <Compile Include="Core\World\Map\MapFactory.cs" />
     <Compile Include="Core\World\Map\MapTile.cs" />
