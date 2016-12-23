@@ -45,7 +45,7 @@ namespace Engine.Core.Sprite
 
             this.CharacterName = "Jordan";
 
-            this.SpriteSheet = (Bitmap)Bitmap.FromFile(@"Data\sheets\avatar\test.png");
+            this.SpriteSheet = (Bitmap)Bitmap.FromFile(@"Data\sheets\avatar\0.png");
             this.SpriteSheet.MakeTransparent(); //? 
 
             Frames = new Surface[4, 4];

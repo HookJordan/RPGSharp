@@ -8,6 +8,7 @@ namespace Engine
 {
     class Program
     {
+        [STAThread]
         static void Main(string[] args)
         {
             Core.Game g = new Core.Game();

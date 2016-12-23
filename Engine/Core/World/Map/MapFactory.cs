@@ -43,6 +43,8 @@ namespace Engine.Core.World.Map
                                 }
                             }
                         }
+
+                        return map;
                     }
                 }
             }

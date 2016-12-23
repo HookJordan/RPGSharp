@@ -23,24 +23,11 @@ namespace Engine.Core.Scenes
         public OpenWorld()
         {
             // setup camera 
-            this.Camera = new World.Camera(50, 50);
-            Camera.X = Camera.X - (Camera.Width / 2);
-            Camera.Y = Camera.Y - (Camera.Height / 2); 
-            this.Avatar = new Sprite.Avatar(50, 50); 
+            this.Camera = new World.Camera(-3, 16); 
+            this.Avatar = new Sprite.Avatar(8, 24);
 
             // setup game map
-            this.Map = new World.Map.WorldMap();
-            this.Map.SeetMap(0, 9); // grass everywhere 
-            for(int x = 0; x < this.Map.Width; x += 3)
-            {
-                for(int y = 0; y < this.Map.Height; y+= 2)
-                {
-                    
-                    {
-                        this.Map.Tiles[x, y].SetLayer(1, 10);
-                    }
-                }
-            }
+            this.Map = World.Map.MapFactory.FromFile(@"Data\maps\0.map");
 
             Settings.Editor = new GUI.MapEditor(this);
         }

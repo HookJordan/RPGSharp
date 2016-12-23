@@ -121,8 +121,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.btnSeed);
             this.groupBox1.Controls.Add(this.cbBlock);
-            this.groupBox1.Controls.Add(this.lblTile);
             this.groupBox1.Controls.Add(this.groupBox4);
             this.groupBox1.Controls.Add(this.groupBox3);
             this.groupBox1.Controls.Add(this.groupBox2);
@@ -208,9 +208,9 @@
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.btnSeed);
             this.groupBox4.Controls.Add(this.pbPreview);
-            this.groupBox4.Location = new System.Drawing.Point(58, 231);
+            this.groupBox4.Controls.Add(this.lblTile);
+            this.groupBox4.Location = new System.Drawing.Point(102, 332);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(76, 88);
             this.groupBox4.TabIndex = 4;
@@ -221,7 +221,7 @@
             // lblTile
             // 
             this.lblTile.AutoSize = true;
-            this.lblTile.Location = new System.Drawing.Point(55, 322);
+            this.lblTile.Location = new System.Drawing.Point(15, 40);
             this.lblTile.Name = "lblTile";
             this.lblTile.Size = new System.Drawing.Size(55, 13);
             this.lblTile.TabIndex = 5;
@@ -266,7 +266,7 @@
             // 
             // btnSeed
             // 
-            this.btnSeed.Location = new System.Drawing.Point(1, 19);
+            this.btnSeed.Location = new System.Drawing.Point(9, 231);
             this.btnSeed.Name = "btnSeed";
             this.btnSeed.Size = new System.Drawing.Size(75, 23);
             this.btnSeed.TabIndex = 7;
@@ -298,6 +298,7 @@
             this.groupBox3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbPreview)).EndInit();
             this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
