@@ -40,6 +40,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -54,12 +55,19 @@
   <ItemGroup>
     <Compile Include="Core\Content.cs" />
     <Compile Include="Core\Game.cs" />
+    <Compile Include="Core\GUI\MapEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Core\GUI\MapEditor.Designer.cs">
+      <DependentUpon>MapEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Core\Scenes\GameScene.cs" />
     <Compile Include="Core\Scenes\MainMenu.cs" />
     <Compile Include="Core\Scenes\OpenWorld.cs" />
     <Compile Include="Core\Sprite\Avatar.cs" />
     <Compile Include="Core\Sprite\SpriteSkill\Skill.cs" />
     <Compile Include="Core\Util\Cursor.cs" />
+    <Compile Include="Core\Util\ZIP.cs" />
     <Compile Include="Core\World\Camera.cs" />
     <Compile Include="Core\World\Map\MapFactory.cs" />
     <Compile Include="Core\World\Map\MapTile.cs" />
@@ -70,6 +78,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Core\GUI\MapEditor.resx">
+      <DependentUpon>MapEditor.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

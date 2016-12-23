@@ -47,24 +47,54 @@ namespace Engine.Core.World.Map
 
         public void LoadSurfaces(string dir)
         {
-            // for each tile sheet in the directory
-            Bitmap sheet = null;
-            Surfaces = new List<Surface>();
-            Surfaces.Add(new Surface(new Bitmap(Settings.tileWidth, Settings.tileHeight))); 
-
-            foreach(string file in System.IO.Directory.GetFiles(dir))
+            if (Content.Surfaces == null)
             {
-                // load the graphic 
-                sheet = (Bitmap)Image.FromFile(file);
-                sheet.MakeTransparent();
-                for(int y = 0; y < sheet.Height; y += Settings.tileHeight)
+                // for each tile sheet in the directory
+                Bitmap sheet = null;
+                Surfaces = new List<Surface>();
+                Surfaces.Add(new Surface(new Bitmap(Settings.tileWidth, Settings.tileHeight)));
+
+                int tileSheetcount = System.IO.Directory.GetFiles(dir).Length;
+
+                for (int i = 1; i <= tileSheetcount; i++)
                 {
-                    for(int x = 0; x < sheet.Width; x+= Settings.tileWidth)
+                    if (System.IO.File.Exists(dir + i + ".png"))
                     {
-                        Bitmap t = sheet.Clone(new Rectangle(x, y, Settings.tileWidth, Settings.tileHeight), System.Drawing.Imaging.PixelFormat.DontCare);
-                        Surfaces.Add(new Surface(t));
+                        sheet = (Bitmap)Image.FromFile(dir + i + ".png");
+                        sheet.MakeTransparent();
+                        for (int y = 0; y < sheet.Height; y += Settings.tileHeight)
+                        {
+                            for (int x = 0; x < sheet.Width; x += Settings.tileWidth)
+                            {
+                                Bitmap t = sheet.Clone(new Rectangle(x, y, Settings.tileWidth, Settings.tileHeight), System.Drawing.Imaging.PixelFormat.DontCare);
+                                Surfaces.Add(new Surface(t));
+                            }
+                        }
                     }
                 }
+
+                //List<string> sheets = System.IO.Directory.GetFiles(dir).ToList();
+                //sheets.Sort();
+
+                //foreach (string file in sheets)
+                //{
+                //    // load the graphic 
+                //    sheet = (Bitmap)Image.FromFile(file);
+                //    sheet.MakeTransparent();
+                //    for (int y = 0; y < sheet.Height; y += Settings.tileHeight)
+                //    {
+                //        for (int x = 0; x < sheet.Width; x += Settings.tileWidth)
+                //        {
+                //            Bitmap t = sheet.Clone(new Rectangle(x, y, Settings.tileWidth, Settings.tileHeight), System.Drawing.Imaging.PixelFormat.DontCare);
+                //            Surfaces.Add(new Surface(t));
+                //        }
+                //    }
+                //}
+                Content.Surfaces = this.Surfaces;
+            }
+            else
+            {
+                this.Surfaces = Content.Surfaces;
             }
         }
 

@@ -19,7 +19,7 @@ namespace Engine
 
         // sprite size
         public static int spriteWidth = 32;
-        public static int spriteHeight = 48; 
+        public static int spriteHeight = 48;
 
         // strings 
         public static string WindowTitle = "Engine v0.1";
@@ -30,9 +30,10 @@ namespace Engine
         public static bool displayCameraLocation = true;
         public static bool displayAvatarLocation = true;
         public static bool displayMouseLocation = true;
-        public static bool highlightMouseLocation = true; 
+        public static bool highlightMouseLocation = true;
 
         // Shared instances 
         public static Game Game { get; set; }
+        public static Core.GUI.MapEditor Editor { get; set; }
     }
 }

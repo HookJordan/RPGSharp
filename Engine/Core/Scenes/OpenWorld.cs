@@ -41,6 +41,8 @@ namespace Engine.Core.Scenes
                     }
                 }
             }
+
+            Settings.Editor = new GUI.MapEditor(this);
         }
 
         public void Draw(Surface screen)
@@ -48,7 +50,8 @@ namespace Engine.Core.Scenes
             // do game events before draw 
             DoEvents(); 
 
-            int realX = 0, realY = 0; 
+            int realX = 0, realY = 0;
+            var blocked = Content.gameFont.Render("B", Color.Purple); 
 
             for(int x = 0; x < Camera.Width + 1; x++)
             {
@@ -70,6 +73,11 @@ namespace Engine.Core.Scenes
                             {
                                 screen.Blit(Map.Surfaces[tile.GetLayer(z)], tileLocation);
                             }
+                        }
+
+                        if (Settings.Editor.Visible && Settings.Editor.cbBlock.Checked && tile.Blocked)
+                        {
+                            screen.Blit(blocked, new Point(x * Settings.tileWidth + 12, y * Settings.tileHeight + 10));
                         }
                     }
 
@@ -98,9 +106,6 @@ namespace Engine.Core.Scenes
             var name = Content.gameFont.Render(Avatar.CharacterName, Color.White);
             screen.Blit(name, new Point(screenX, screenY - 12));
             name.Dispose();
-
-
-            // target location for debugging 
             #endregion
             #region Debug
             if (Settings.displayCameraLocation)
@@ -130,6 +135,14 @@ namespace Engine.Core.Scenes
                 screen.Draw(new Box(new Point((Mouse.MousePosition.X / Settings.tileWidth) * Settings.tileWidth, (Mouse.MousePosition.Y / Settings.tileHeight) * Settings.tileHeight), new Size(Settings.tileWidth, Settings.tileHeight)), Color.Purple);
             }
 
+            if(Settings.displayAvatarLocation)
+            {
+                int tarX = (Avatar.TargetX - Camera.X) * Settings.tileWidth;
+                int tarY = (Avatar.TargetY - Camera.Y) * Settings.tileHeight;
+
+                screen.Draw(new Box(new Point(tarX, tarY), new Size(Settings.tileWidth, Settings.tileHeight)), Color.Red);
+            }
+
             #endregion
         }
 
@@ -140,7 +153,7 @@ namespace Engine.Core.Scenes
             {
 
                 #region SpriteMovement
-                if(Avatar.TargetX > Avatar.X) // right movement 
+                if(Avatar.TargetX > Avatar.X && !Map.Tiles[Avatar.X + 1, Avatar.Y].Blocked) // right movement 
                 {
                     if (Avatar.X + 1 != Map.Width)
                     {
@@ -160,7 +173,7 @@ namespace Engine.Core.Scenes
 
                             if (Avatar.X == Camera.X + Camera.Width - 6) // move camera at end 
                             {
-                                Camera.X++;
+                                Camera.X += Camera.ScrollSpeed;
                             }
                         }
                     }
@@ -168,7 +181,7 @@ namespace Engine.Core.Scenes
                     // rest of the movments are the same sequence just different directions
                     // will comment them at a later time... 
                 } 
-                else if (Avatar.TargetX < Avatar.X)
+                else if (Avatar.TargetX < Avatar.X && !Map.Tiles[Avatar.X - 1, Avatar.Y].Blocked)
                 {
                     if (Avatar.X - 1 != -1)
                     {
@@ -187,12 +200,12 @@ namespace Engine.Core.Scenes
 
                             if (Avatar.X == Camera.X + 6)
                             {
-                                Camera.X--;
+                                Camera.X -= Camera.ScrollSpeed;
                             }
                         }
                     }
                 }
-                else if (Avatar.TargetY > Avatar.Y)
+                else if (Avatar.TargetY > Avatar.Y && !Map.Tiles[Avatar.X, Avatar.Y + 1].Blocked)
                 {
                     if (Avatar.Y + 1 != Map.Height)
                     {
@@ -211,12 +224,12 @@ namespace Engine.Core.Scenes
 
                             if (Avatar.Y == Camera.Y + Camera.Height - 4)
                             {
-                                Camera.Y++;
+                                Camera.Y += Camera.ScrollSpeed;
                             }
                         }
                     }
                 }
-                else if (Avatar.TargetY < Avatar.Y)
+                else if (Avatar.TargetY < Avatar.Y && !Map.Tiles[Avatar.X, Avatar.Y - 1].Blocked)
                 {
                     if (Avatar.Y - 1 != -1)
                     {
@@ -235,7 +248,7 @@ namespace Engine.Core.Scenes
 
                             if (Avatar.Y == Camera.Y + 4)
                             {
-                                Camera.Y--;
+                                Camera.Y -= Camera.ScrollSpeed;
                             }
                         }
                     }
@@ -256,21 +269,41 @@ namespace Engine.Core.Scenes
 
         public void Keyboard_down(KeyboardEventArgs e)
         {
-            //throw new NotImplementedException();
-            if (e.Key == Key.LeftArrow)
-                this.Avatar.X--;
-            else if (e.Key == Key.RightArrow)
-                this.Avatar.X++;
-            else if (e.Key == Key.UpArrow)
-                this.Avatar.Y--;
-            else if (e.Key == Key.DownArrow)
-                this.Avatar.Y++;
+            if (Settings.Editor.Visible)
+            {
+                if (e.Key == Key.LeftArrow || e.Key == Key.A)
+                    Camera.X--;
+                else if (e.Key == Key.RightArrow || e.Key == Key.D)
+                    Camera.X++;
+                else if (e.Key == Key.UpArrow || e.Key == Key.W)
+                    Camera.Y--;
+                else if (e.Key == Key.DownArrow || e.Key == Key.S )
+                    Camera.Y++;
+            }
+            else
+            {
+                //throw new NotImplementedException();
+                if (e.Key == Key.LeftArrow || e.Key == Key.A)
+                    // this.Avatar.X--;
+                    this.Avatar.CurrentDirection = Sprite.Direction.Left;
+                else if (e.Key == Key.RightArrow || e.Key == Key.D)
+                    // this.Avatar.X++;
+                    this.Avatar.CurrentDirection = Sprite.Direction.Right;
+                else if (e.Key == Key.UpArrow || e.Key == Key.W)
+                    // this.Avatar.Y--;
+                    this.Avatar.CurrentDirection = Sprite.Direction.Up;
+                else if (e.Key == Key.DownArrow || e.Key == Key.S)
+                    //this.Avatar.Y++;
+                    this.Avatar.CurrentDirection = Sprite.Direction.Down;
+                else if (e.Key == Key.F1)
+                {
+                    Settings.Editor.Show();
+                }
+            }
         }
 
         public void Keyboard_up(KeyboardEventArgs e)
         {
-            int realMouseX = (Mouse.MousePosition.X / Settings.tileWidth) + Camera.X;
-            int realMouseY = (Mouse.MousePosition.Y / Settings.tileHeight) + Camera.Y;
 
             //throw new NotImplementedException();
         }
@@ -279,12 +312,45 @@ namespace Engine.Core.Scenes
         {
             int realMouseX = (Mouse.MousePosition.X / Settings.tileWidth) + Camera.X;
             int realMouseY = (Mouse.MousePosition.Y / Settings.tileHeight) + Camera.Y;
-
-            //throw new NotImplementedException();
-            if (e.Button == MouseButton.PrimaryButton)
+            // editor movement 
+            if (Settings.Editor.Visible)
             {
-                Avatar.TargetX = realMouseX;
-                Avatar.TargetY = realMouseY;
+                if (Settings.Editor.cbBlock.Checked)
+                {
+                    // primary to block, secondary to unblock 
+                    Map.Tiles[realMouseX, realMouseY].Blocked = e.Button == MouseButton.PrimaryButton;
+                }
+                else
+                {
+                    // tile editing 
+                    if (e.Button == MouseButton.PrimaryButton)
+                    {
+                        // Map.Tiles[realMouseX, realMouseY].Layers[Settings.Editor.SelectedLayer] = Settings.Editor.SelectedTile;
+                        for (int x = 0; x < Settings.Editor.MultiSelected.GetLength(0); x++)
+                        {
+                            for (int y = 0; y < Settings.Editor.MultiSelected.GetLength(1); y++)
+                            {
+                                Map.Tiles[realMouseX + x, realMouseY + y].Layers[Settings.Editor.SelectedLayer] = Settings.Editor.MultiSelected[x, y];
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Map.Tiles[realMouseX, realMouseY].Layers[Settings.Editor.SelectedLayer] = 0;
+                    }
+                }
+            }
+            else
+            {
+                // normal game movement 
+                
+
+                //throw new NotImplementedException();
+                if (e.Button == MouseButton.PrimaryButton)
+                {
+                    Avatar.TargetX = realMouseX;
+                    Avatar.TargetY = realMouseY;
+                }
             }
         }
 
@@ -295,7 +361,36 @@ namespace Engine.Core.Scenes
 
         public void MouseMotion(MouseMotionEventArgs e)
         {
-            //throw new NotImplementedException();
+            int realMouseX = (Mouse.MousePosition.X / Settings.tileWidth) + Camera.X;
+            int realMouseY = (Mouse.MousePosition.Y / Settings.tileHeight) + Camera.Y;
+
+            if (Settings.Editor.Visible)
+            {
+                if (Settings.Editor.cbBlock.Checked)
+                {
+                    // primary to block, secondary to unblock 
+                    if(e.Button == MouseButton.PrimaryButton)
+                    {
+                        Map.Tiles[realMouseX, realMouseY].Blocked = true;
+                    }
+                    else if(e.Button == MouseButton.SecondaryButton)
+                    {
+                        Map.Tiles[realMouseX, realMouseY].Blocked = false;
+                    }
+                }
+                else
+                {
+                    // simple tile editing 
+                    if (e.Button == MouseButton.PrimaryButton)
+                    {
+                        Map.Tiles[realMouseX, realMouseY].Layers[Settings.Editor.SelectedLayer] = Settings.Editor.SelectedTile;
+                    }
+                    else if (e.Button == MouseButton.SecondaryButton)
+                    {
+                        Map.Tiles[realMouseX, realMouseY].Layers[Settings.Editor.SelectedLayer] = 0;
+                    }
+                }
+            }
         }
     }
 }
