@@ -10,12 +10,13 @@ namespace Engine
     public static class Settings
     {
         // Window settings 
-        public static int Width = 720;
-        public static int Height = 480;
+        public static int Width = 1280;
+        public static int Height = 720;
 
         // Tile settings
         public static int tileWidth = 32;
         public static int tileHeight = 32;
+        public static int PanelWidth = 13; 
 
         // sprite size
         public static int spriteWidth = 32;
@@ -25,11 +26,12 @@ namespace Engine
         public static string WindowTitle = "Engine v0.1";
 
         // debug settings 
-        public static bool displayFPS = true;
+        public static bool displayFPS = false;
         public static bool displayGrid = false;
-        public static bool displayCameraLocation = true;
-        public static bool displayAvatarLocation = true;
-        public static bool displayMouseLocation = true;
+        public static bool displayCameraLocation = false;
+        public static bool displayAvatarLocation = false;
+        public static bool displayAvatarPath = false;
+        public static bool displayMouseLocation = false;
         public static bool highlightMouseLocation = true;
 
         // Shared instances 

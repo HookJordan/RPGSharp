@@ -25,12 +25,16 @@ namespace Engine.Core.World.Map
                         // read header into new map object 
                         WorldMap map = new WorldMap(br.ReadInt32(), br.ReadInt32());
 
+                        map.SpawnX = br.ReadInt32();
+                        map.SpawnY = br.ReadInt32(); 
+
                         // now we read the tiles
                         for (int x = 0; x < map.Width; x++)
                         {
                             for(int y= 0; y < map.Height; y++)
                             {
                                 //map.Tiles[x, y] = new MapTile();
+
 
                                 // properties 
                                 map.Tiles[x, y].Blocked = br.ReadBoolean();
@@ -68,6 +72,10 @@ namespace Engine.Core.World.Map
                     // map header information 
                     bw.Write(map.Width);
                     bw.Write(map.Height);
+
+                    // write avatar spawn coords 
+                    bw.Write(map.SpawnX);
+                    bw.Write(map.SpawnY); 
 
                     // loop through the map and save all the tiles 
                     for(int x = 0; x < map.Width; x++)

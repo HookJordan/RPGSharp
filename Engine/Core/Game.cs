@@ -85,11 +85,17 @@ namespace Engine.Core
         // draw frame 
         private void Events_Tick(object sender, TickEventArgs e)
         {
-            // clear previous frame 
-            Screen.Fill(Color.Black);
+            Surface s = new Surface(Settings.Width, Settings.Height);
+            s.Fill(Color.Black);
+            Scenes[CurrentScene].Draw(s);
 
-            // call draw 
-            Scenes[CurrentScene].Draw(Screen);
+            Screen.Blit(s, new Point(0, 0)); 
+
+            //// clear previous frame 
+            //Screen.Fill(Color.Black);
+
+            //// call draw 
+            //Scenes[CurrentScene].Draw(Screen);
 
             // render fps 
             #region Debug

@@ -55,23 +55,39 @@
   <ItemGroup>
     <Compile Include="Core\Content.cs" />
     <Compile Include="Core\Game.cs" />
+    <Compile Include="Core\GamePanel\InventoryPanel.cs" />
+    <Compile Include="Core\GamePanel\PanelButton.cs" />
+    <Compile Include="Core\GamePanel\StatPanel.cs" />
     <Compile Include="Core\GUI\MapEditor.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Core\GUI\MapEditor.Designer.cs">
       <DependentUpon>MapEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Core\Particles\Emitters\Blood.cs" />
+    <Compile Include="Core\Particles\Emitters\Firework.cs" />
+    <Compile Include="Core\Particles\Environment.cs" />
+    <Compile Include="Core\Particles\Particle.cs" />
+    <Compile Include="Core\Particles\ParticleSystem.cs" />
+    <Compile Include="Core\Particles\Emitters\Explosion.cs" />
+    <Compile Include="Core\Particles\Emitters\Fountain.cs" />
     <Compile Include="Core\Scenes\GameScene.cs" />
     <Compile Include="Core\Scenes\MainMenu.cs" />
     <Compile Include="Core\Scenes\OpenWorld.cs" />
+    <Compile Include="Core\Scripting\Executor.cs" />
     <Compile Include="Core\Sprite\Avatar.cs" />
+    <Compile Include="Core\Sprite\Items\Item.cs" />
+    <Compile Include="Core\Sprite\NPC.cs" />
+    <Compile Include="Core\Sprite\PathFinding.cs" />
     <Compile Include="Core\Sprite\SpriteSkill\Skill.cs" />
     <Compile Include="Core\Util\Cursor.cs" />
     <Compile Include="Core\Util\ZIP.cs" />
     <Compile Include="Core\World\Camera.cs" />
     <Compile Include="Core\World\Map\MapFactory.cs" />
     <Compile Include="Core\World\Map\MapTile.cs" />
+    <Compile Include="Core\World\Map\TileSheet.cs" />
     <Compile Include="Core\World\Map\WorldMap.cs" />
+    <Compile Include="Core\World\Triggers\Trigger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
@@ -83,6 +99,9 @@
     <EmbeddedResource Include="Core\GUI\MapEditor.resx">
       <DependentUpon>MapEditor.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Core\Sprite\Player\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -11,6 +11,7 @@ namespace Engine.Core.World.Map
         public int[] Layers { get; set; }
         public int TriggerId { get; set; }
         public bool Blocked { get; set; }
+        public List<Sprite.Items.Item> Items { get; set; }
 
         public MapTile()
         {
@@ -18,6 +19,7 @@ namespace Engine.Core.World.Map
             this.Layers = new int[4];
             this.Blocked = false;
             this.TriggerId = -1; // no trigger? 
+            this.Items = new List<Sprite.Items.Item>(); 
         }
 
         public int GetLayer (int layer)

@@ -27,6 +27,10 @@ namespace Engine.Core.Sprite
         public int DrawX { get; set; }
         public int DrawY { get; set; }
 
+        public int nextX { get; set; }
+        public int nextY { get; set; }
+        public List<Point> Points { get; set; }
+
         public int TargetX { get; set; }
         public int TargetY { get; set; }
 
@@ -36,7 +40,20 @@ namespace Engine.Core.Sprite
         private Surface[,] Frames { get; set; }
         public int CurrentFrame { get; set; }
 
-        public Avatar(int x = 50, int y = 50)
+        public bool Moving { get { return TargetX != X && TargetY != Y; } }
+
+        public int MoveSpeed { get { return 8; } } //if (Run) { return 16; } else { return 8; } } }
+
+        public bool Run { get; set; }
+        public double Stamina { get; set; }
+        public double CurrentStamina { get; set; }
+
+        public bool Combat { get; set; }
+
+        // skills 
+        public Dictionary<string, SpriteSkill.Skill> Skills { get; set; }
+
+        public Avatar(int x = 50, int y = 50, string spriteSheet = @"Data\sheets\avatar\0.png")
         {
             this.X = x;
             this.Y = y;
@@ -45,7 +62,7 @@ namespace Engine.Core.Sprite
 
             this.CharacterName = "Jordan";
 
-            this.SpriteSheet = (Bitmap)Bitmap.FromFile(@"Data\sheets\avatar\0.png");
+            this.SpriteSheet = (Bitmap)Bitmap.FromFile(spriteSheet);
             this.SpriteSheet.MakeTransparent(); //? 
 
             Frames = new Surface[4, 4];
@@ -53,10 +70,26 @@ namespace Engine.Core.Sprite
            
             this.CurrentDirection = Direction.Down;
             this.CurrentFrame = 2;
+
+            // setup skill table
+            this.Skills = new Dictionary<string, SpriteSkill.Skill>();
+            this.Skills.Add("hp", new SpriteSkill.Skill(10, SpriteSkill.Skill.Experience(10), 10));
+
+            foreach(string skill in this.Skills.Keys)
+            {
+                this.Stamina += Skills[skill].Level;
+            }
+
+            this.CurrentStamina = this.Stamina;
         }
 
+        /// <summary>
+        /// Call this function to cut the sprite sheet into separate images.. (easier to work with) 
+        /// </summary>
         public void buildFrames()
         {
+            // Implement paperdoll items here :D 
+            // draw each layer one at a time for the sheet here starting with the base, then cut it up 
             for(int y = 0; y < 4; y++)
             {
                 for(int x = 0; x < 4; x++)
@@ -68,9 +101,41 @@ namespace Engine.Core.Sprite
 
         public Surface GetFrame()
         {
+            //get the current frame
             return Frames[CurrentFrame, (int)CurrentDirection];
         }
 
+
+        public double GetStaminaPercentage()
+        {
+            // simple math for stamina percentage 
+            return (CurrentStamina / Stamina) * 100.0;
+        }
+
+        #region HPHelper
+        public int GetHP()
+        {
+            return Skills["hp"].Value;
+        }
+
+        public double GetHPPercentage()
+        {
+            // Simple math for hp percentage -> used to draw UI bars 
+            return ((double)Skills["hp"].Value / (double)Skills["hp"].Level) * 100.0;
+        }
+
+        public int GetTotalHP()
+        {
+            return Skills["hp"].Level;
+        }
+
+        public int TakeDammage(int a)
+        {
+            Skills["hp"].Value -= a;
+
+            return GetHP(); 
+        }
+        #endregion
 
     }
 }

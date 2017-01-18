@@ -30,6 +30,14 @@ namespace Engine.Core.GUI
         List<Bitmap> TileSets { get; set; }
         public Core.Scenes.OpenWorld Scene { get; set; }
 
+        public bool TriggerEditor
+        {
+            get
+            {
+                return tabControl1.SelectedIndex == 1;
+            }
+        }
+
         public MapEditor(Core.Scenes.OpenWorld sc)
         {
             this.Scene = sc;
@@ -48,6 +56,11 @@ namespace Engine.Core.GUI
         private void MapEditor_Load(object sender, EventArgs e)
         {
             this.TileSets = new List<Bitmap>();
+
+            foreach(var t in Scene.GameTriggers)
+            {
+                this.lstTriggers.Items.Add(t.Id + ": " + t.Name);
+            }
 
             string dir = @"Data\sheets\tilesets\"; 
             int tileSheetcount = System.IO.Directory.GetFiles(dir).Length;
@@ -99,7 +112,7 @@ namespace Engine.Core.GUI
             startIndex += (pbSet.Image.Width / Settings.tileWidth) * yLoc;
             startIndex += xLoc;
 
-            pbPreview.Image = this.Scene.Map.Surfaces[startIndex].Bitmap;
+            pbPreview.Image = Scene.Map.GetSurface(startIndex).Bitmap; //this.Scene.Map.Surfaces[startIndex].Bitmap;
 
             return startIndex;
         }
@@ -221,6 +234,60 @@ namespace Engine.Core.GUI
                     Scene.Map = Core.World.Map.MapFactory.ImportMap(ofd.FileName); 
                 }
             }
+        }
+
+        private void lstTriggers_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            txtTriggerName.Text = Scene.GameTriggers[lstTriggers.SelectedIndex].Name;
+            txtTriggerData.Text = Scene.GameTriggers[lstTriggers.SelectedIndex].Data;
+            triggerbox.Text = "Trigger: " + lstTriggers.SelectedIndex;
+        }
+
+        private void btnCreateTrigger_Click(object sender, EventArgs e)
+        {
+            if(txtTriggerName.TextLength > 0)
+            {
+                if(txtTriggerData.TextLength > 0)
+                {
+                    var trigger = new World.Triggers.Trigger();
+
+                    trigger.Id = lstTriggers.Items.Count + 1;
+                    trigger.Name = txtTriggerName.Text;
+                    trigger.Data = txtTriggerData.Text;
+
+                    lstTriggers.Items.Add(trigger.Id + ": " + trigger.Name);
+                    Scene.GameTriggers.Add(trigger);
+                    Scene.saveTriggerScripts();
+                }
+                else
+                {
+                    MessageBox.Show("Please enter trigger scrip data!"); 
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please include a trigger name!"); 
+            }
+        }
+
+        private void btnSaveTrigger_Click(object sender, EventArgs e)
+        {
+            // make sure we have a selected item 
+            if(lstTriggers.SelectedItem != null)
+            {
+                Scene.GameTriggers[lstTriggers.SelectedIndex].Name = txtTriggerName.Text;
+                Scene.GameTriggers[lstTriggers.SelectedIndex].Data = txtTriggerData.Text;
+                Scene.saveTriggerScripts();
+            }
+            else
+            {
+                MessageBox.Show("No trigger selected!"); 
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(tabControl1.SelectedIndex.ToString());
         }
     }
 }

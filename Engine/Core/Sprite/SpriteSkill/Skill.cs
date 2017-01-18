@@ -9,27 +9,38 @@ namespace Engine.Core.Sprite.SpriteSkill
     public class Skill
     {
         public int Level { get; set; }
-        public int CurrentXP { get; set; }
-        public int NextLevel { get; set; }
-        public int AccumulatedXP { get; set; }
+        public int Value { get; set; } // boosts ? and HP counter 
+
+        public double CurrentXP { get; set; }
+        public double xpRequired { get; set; }
+
 
         public Skill()
         {
             this.Level = 1;
+            this.Value = 1; 
             this.CurrentXP = 0;
-            this.NextLevel = 128;
         }
 
-        public void Gain(int xp)
+        public Skill(int level, double currentXP, int value)
         {
-            this.CurrentXP += xp;
+            // level skill to match current xp 
+            this.CurrentXP = currentXP;
+            this.Level = level;
+            this.Value = value;
+            xpRequired = Experience(level + 1);
+        }
 
-            if(this.CurrentXP > this.NextLevel)
+        public static double Experience(int level)
+        {
+            double a = 0;
+            for (int i = 1; i < level; i++)
             {
-                this.CurrentXP = this.CurrentXP - this.NextLevel;
-                this.Level++;
-                this.NextLevel = this.Level * 128; 
+                a += Math.Floor((i + 300) * (Math.Pow(2, i / 7)));
             }
+
+            return Math.Floor(a / 4);
+
         }
     }
 }
